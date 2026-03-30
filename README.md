@@ -30,12 +30,16 @@ hw8/
 
 ## Instructions to run the project
 
-# Prerequisites needed before running the project:
+### Prerequisites needed before running the project:
 - Packer installed
 - Terraform installed
 - AWS CLI installed and configured with credentials
 - an SSH key pair
 - an AWS account with acces to us-east-1
+
+### How to run:
+- Build the AMI with Packer: cd into your packer folder and run packer init, then packer build amazon-linux.pkr.hcl
+
 
 
 ## How to connect to the private instances from the bastion host:
