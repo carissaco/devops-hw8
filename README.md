@@ -48,6 +48,12 @@ hw8/
     - <img width="1453" height="557" alt="image" src="https://github.com/user-attachments/assets/ad27ecc4-9f2e-47fa-bb7c-bf37aeae6a0e" />
   -  then, run terraform plan. It will ask for your ami id and your public ip address. Enter those. It will then give you an overview of what Terraform will do:
     - <img width="1477" height="682" alt="image" src="https://github.com/user-attachments/assets/eba40b79-191b-462a-95a0-c5cf1272390d" />
+  - If the plan looks good, run terraform apply. You will enter your AMI ID and public ip again.
+    - <img width="1487" height="632" alt="image" src="https://github.com/user-attachments/assets/2a5297c0-6659-435b-89cc-1b9433cf2046" />
+    - Enter yes when asked to perform the actions, and you will get a success message along with outputs including you bastion public ip, and private instance ips
+      - <img width="1481" height="510" alt="image" src="https://github.com/user-attachments/assets/ba326789-49ae-4a6c-8dad-76de5f40a423" />
+      
+
 
 
 
