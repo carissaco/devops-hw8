@@ -55,10 +55,16 @@ hw8/
 
 ## How to connect to the private instances from the bastion host:
 - ssh into bastion using your bastion public ip using -A for agent forwarding:
+  ```
+  ssh -A -i ~/.ssh/id_ed25519_hw8 ec2-user@<bastion-public-ip>
+  ```
   - <img width="1470" height="275" alt="image" src="https://github.com/user-attachments/assets/6667b26a-0881-4936-b704-5a9e8f39c62b" />
 - then connect to one of the private instances by doing ssh using one of the private instance ips:
+  ```
+  ssh ec2-user@<private-instance-ip>
+  ```
   - <img width="1461" height="252" alt="image" src="https://github.com/user-attachments/assets/a6ddd90e-e961-4de5-9153-2ab0b6ec6ee1" />
-- finally, verfiy that docker is working on the private instance by running `docker --version`
+- finally, verify that docker is working on the private instance by running `docker --version`
   - <img width="1482" height="51" alt="image" src="https://github.com/user-attachments/assets/d5880d52-5a72-42f2-ab9d-a0302c0958a9" />
 
 
