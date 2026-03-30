@@ -33,15 +33,23 @@ hw8/
 ### Prerequisites needed before running the project:
 - Packer installed
 - Terraform installed
+- Your IP address
 - AWS CLI installed and configured with credentials
 - an SSH key pair
 - an AWS account with acces to us-east-1
 
 ### How to run:
 - Build the AMI with Packer: cd into your packer folder and run packer init, then packer build amazon-linux.pkr.hcl
-  - when complete, you should see the artifacts of successful builds:
+  - when complete, you should see the artifacts of successful builds. Yut want to note the AMI id down.
   - <img width="1458" height="158" alt="image" src="https://github.com/user-attachments/assets/ee4a1c17-fba2-4c48-88b4-a6be17402357" />
   - <img width="1033" height="298" alt="image" src="https://github.com/user-attachments/assets/bca60b32-39ca-49da-851f-f20560e2c525" />
+- Provision infrastructure with Terraform:
+  - cd into your terraform folder and run terraform init. You should see a success message when it's complete:
+    - <img width="1453" height="557" alt="image" src="https://github.com/user-attachments/assets/ad27ecc4-9f2e-47fa-bb7c-bf37aeae6a0e" />
+  -  then, run terraform plan. It will ask for your ami id and your public ip address. Enter those. It will then give you an overview of what Terraform will do:
+    - <img width="1477" height="682" alt="image" src="https://github.com/user-attachments/assets/eba40b79-191b-462a-95a0-c5cf1272390d" />
+
+
 
 
 
