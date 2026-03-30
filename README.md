@@ -39,6 +39,11 @@ hw8/
 
 ### How to run:
 - Build the AMI with Packer: cd into your packer folder and run packer init, then packer build amazon-linux.pkr.hcl
+  - when complete, you should see the artifacts of successful builds:
+  - <img width="1458" height="158" alt="image" src="https://github.com/user-attachments/assets/ee4a1c17-fba2-4c48-88b4-a6be17402357" />
+  - <img width="1033" height="298" alt="image" src="https://github.com/user-attachments/assets/bca60b32-39ca-49da-851f-f20560e2c525" />
+
+
 
 
 
