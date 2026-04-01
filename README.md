@@ -2,7 +2,7 @@
 - In this repo, I used Packer to create a custom AMI and Terraform to create infrastructure that uses that AMI.
 - The AMI includes Amazon Linux, Docker, and my SSH public key pre-installed.
 - Terraform provisions a VPC with public and private subnets, a bastion host in the public subnet, and 6 EC2 instances in the private subnet using the custom AMI.
-- - Prometheus and Grafana are deployed as EC2 instances in the private subnet for monitoring.
+- Prometheus and Grafana are deployed as EC2 instances in the private subnet for monitoring.
 -  The AMI includes Node Exporter, which exposes system metrics (CPU, memory, disk) on port 9100 so Prometheus can
   scrape them.
 - Prometheus is configured to scrape Node Exporter on all 6 private instances every 15 seconds.
@@ -77,14 +77,13 @@
 ## Connecting to Prometheus and Grafana:
 
 ### Prometheus:
-- ssh into bastion using your bastion public ip using -A for agent forwarding, the go to the Prometheus instance using the prometheus_private_ip from the terraform output:
+- ssh into bastion using your bastion public ip using -A for agent forwarding, then go to the Prometheus instance using the prometheus_private_ip from the terraform output:
   ```
   ssh -A -i ~/.ssh/id_ed25519_hw8 ec2-user@<bastion-public-ip>
   ssh ec2-user@<prometheus_private_ip>
   ```
   - <img width="1237" height="741" alt="image" src="https://github.com/user-attachments/assets/f4e246c9-648b-48fd-9316-846a30809de6" />
--  Configure Prometheus by editing the config file with sudo vi /etc/prometheus/prometheus.yml and adding the private instance IPs from the terraform
-  output
+- Configure Prometheus by editing the config file with `sudo vi /etc/prometheus/prometheus.yml` and adding the private instance IPs from the terraform output
   - <img width="1837" height="166" alt="image" src="https://github.com/user-attachments/assets/1f107e1d-5bc4-4339-a355-2eb68ccec66f" />
 - start prometheus using `sudo systemctl start prometheus`
 - Run `sudo systemctl status prometheus` to check if it's running
@@ -95,7 +94,11 @@
 - start grafana `sudo systemctl start grafana-server`
 - run `sudo systemctl status grafana-server` to check that it's running
   - <img width="1910" height="483" alt="image" src="https://github.com/user-attachments/assets/b6ca8a65-cd38-4f4b-a09b-59910aceb348" />
-- Open your browser at http://localhost:3000 and log in. Reset the admin password if needed using `sudo grafana-cli admin reset-admin-password admin`
+- Open a new local terminal and create an SSH tunnel:
+  ```
+  ssh -L 3000:<grafana_private_ip>:3000 -i ~/.ssh/id_ed25519_hw8 ec2-user@<bastion_public_ip>
+  ```
+- Open your browser at `http://localhost:3000` and log in. Reset the admin password if needed using `sudo grafana-cli admin reset-admin-password admin`
   - <img width="1919" height="988" alt="grafana browser login" src="https://github.com/user-attachments/assets/47dcfe92-a267-45c8-9831-92b8857e1168" />
   - <img width="1919" height="981" alt="in grafana dashboard" src="https://github.com/user-attachments/assets/8346faf3-2c33-495a-b036-054150d05ac5" />
 - Go to Connections → Data sources → Add data source, select Prometheus, and set the URL to http://<prometheus_private_ip>:9090. Click save and test
