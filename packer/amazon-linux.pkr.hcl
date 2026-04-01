@@ -17,7 +17,7 @@ variable "ssh_public_key_path" {
 
 source "amazon-ebs" "amazon_linux" {
   region        = var.aws_region
-  ami_name      = "hw9-amazon-linux-docker-node-exporter-{{timestamp}}"
+  ami_name      = "hw9-amazon-linux-{{timestamp}}"
   instance_type = "t2.micro"
 
   source_ami_filter {
@@ -31,6 +31,13 @@ source "amazon-ebs" "amazon_linux" {
   }
 
   ssh_username = "ec2-user"
+
+  launch_block_device_mappings {
+    device_name           = "/dev/xvda"
+    volume_size           = 20
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
 }
 
 build {
@@ -59,6 +66,34 @@ build {
       "sudo systemctl daemon-reload",
       "sudo systemctl enable node_exporter",
       "sudo systemctl start node_exporter"
+    ]
+  }
+
+  # Install Prometheus
+  provisioner "shell" {
+    inline = [
+      "curl -LO https://github.com/prometheus/prometheus/releases/download/v2.53.0/prometheus-2.53.0.linux-amd64.tar.gz",
+      "tar -xzf prometheus-2.53.0.linux-amd64.tar.gz",
+      "sudo mv prometheus-2.53.0.linux-amd64/prometheus /usr/local/bin/",
+      "sudo mv prometheus-2.53.0.linux-amd64/promtool /usr/local/bin/",
+      "sudo mkdir -p /etc/prometheus /var/lib/prometheus",
+      "sudo cp -r prometheus-2.53.0.linux-amd64/consoles /etc/prometheus",
+      "sudo cp -r prometheus-2.53.0.linux-amd64/console_libraries /etc/prometheus",
+      "rm -rf prometheus-2.53.0.linux-amd64*",
+      "sudo useradd -rs /bin/false prometheus",
+      "sudo chown prometheus:prometheus /usr/local/bin/prometheus /usr/local/bin/promtool",
+      "sudo chown -R prometheus:prometheus /etc/prometheus /var/lib/prometheus",
+      "sudo bash -c 'cat > /etc/systemd/system/prometheus.service <<EOF\n[Unit]\nDescription=Prometheus\nAfter=network.target\n\n[Service]\nUser=prometheus\nExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/var/lib/prometheus\n\n[Install]\nWantedBy=multi-user.target\nEOF'",
+      "sudo systemctl daemon-reload"
+    ]
+  }
+
+  # Install Grafana
+  provisioner "shell" {
+    inline = [
+      "sudo bash -c 'cat > /etc/yum.repos.d/grafana.repo <<EOF\n[grafana]\nname=grafana\nbaseurl=https://rpm.grafana.com\nrepo_gpgcheck=1\nenabled=1\ngpgcheck=1\ngpgkey=https://rpm.grafana.com/gpg.key\nsslverify=1\nsslcacert=/etc/pki/tls/certs/ca-bundle.crt\nEOF'",
+      "sudo dnf install -y grafana",
+      "sudo systemctl daemon-reload"
     ]
   }
 
