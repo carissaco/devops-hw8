@@ -17,7 +17,7 @@ variable "ssh_public_key_path" {
 
 source "amazon-ebs" "amazon_linux" {
   region        = var.aws_region
-  ami_name      = "hw8-amazon-linux-docker-{{timestamp}}"
+  ami_name      = "hw9-amazon-linux-docker-node-exporter-{{timestamp}}"
   instance_type = "t2.micro"
 
   source_ami_filter {
@@ -44,6 +44,21 @@ build {
       "sudo systemctl enable docker",
       "sudo systemctl start docker",
       "sudo usermod -aG docker ec2-user"
+    ]
+  }
+
+  # Install Node Exporter
+  provisioner "shell" {
+    inline = [
+      "curl -LO https://github.com/prometheus/node_exporter/releases/download/v1.8.2/node_exporter-1.8.2.linux-amd64.tar.gz",
+      "tar -xzf node_exporter-1.8.2.linux-amd64.tar.gz",
+      "sudo mv node_exporter-1.8.2.linux-amd64/node_exporter /usr/local/bin/",
+      "rm -rf node_exporter-1.8.2.linux-amd64*",
+      "sudo useradd -rs /bin/false node_exporter",
+      "sudo bash -c 'cat > /etc/systemd/system/node_exporter.service <<EOF\n[Unit]\nDescription=Node Exporter\nAfter=network.target\n\n[Service]\nUser=node_exporter\nExecStart=/usr/local/bin/node_exporter\n\n[Install]\nWantedBy=multi-user.target\nEOF'",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable node_exporter",
+      "sudo systemctl start node_exporter"
     ]
   }
 
