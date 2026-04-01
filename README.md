@@ -107,14 +107,5 @@
 
 
 
-  
-
-  
-
-  
-
-- SSH from bastion into the Grafana instance 
-
-
 
 
