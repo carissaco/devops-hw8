@@ -100,7 +100,6 @@
   - <img width="1919" height="981" alt="in grafana dashboard" src="https://github.com/user-attachments/assets/8346faf3-2c33-495a-b036-054150d05ac5" />
 - Go to Connections → Data sources → Add data source, select Prometheus, and set the URL to http://<prometheus_private_ip>:9090. Click save and test
   - <img width="1919" height="920" alt="add prometheus as a datasource" src="https://github.com/user-attachments/assets/1944b0b4-7961-4936-a309-0ea32c218148" />
-  - <img width="1919" height="969" alt="run prometheus data query" src="https://github.com/user-attachments/assets/cbaac8b6-e7f7-4b90-9a6b-f3e312fbf879" />
     - when you get the success message, that means it's working
       - <img width="1565" height="160" alt="prometheus datasource working" src="https://github.com/user-attachments/assets/a651a8e6-1a56-45bc-b16c-3f2c7436efe6" />
 - Go to explore -> prometheus and run the query `node_cpu_seconds_total`. This will allow you to see  the metrics data from the private instances
