@@ -24,13 +24,85 @@ module "vpc" {
   }
 }
 
-module "ec2" {
-  source = "./modules/ec2"
+resource "aws_security_group" "bastion" {
+  name        = "${var.project_name}-bastion-sg"
+  description = "Allow SSH only from my IP"
+  vpc_id      = module.vpc.vpc_id
 
-  project_name       = var.project_name
-  vpc_id             = module.vpc.vpc_id
-  ami_id             = var.ami_id
-  my_ip              = var.my_ip
-  public_subnet_id   = module.vpc.public_subnets[0]
-  private_subnet_ids = module.vpc.private_subnets
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.my_ip}/32"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-bastion-sg"
+  }
+}
+
+resource "aws_security_group" "private" {
+  name        = "${var.project_name}-private-sg"
+  description = "Allow SSH only from bastion"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-private-sg"
+  }
+}
+
+module "bastion" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.0"
+
+  name = "${var.project_name}-bastion"
+
+  ami                         = var.ami_id
+  instance_type               = "t2.micro"
+  subnet_id                   = module.vpc.public_subnets[0]
+  vpc_security_group_ids      = [aws_security_group.bastion.id]
+  associate_public_ip_address = true
+
+  tags = {
+    Name = "${var.project_name}-bastion"
+  }
+}
+
+module "private_instances" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.0"
+
+  count = 6
+
+  name = "${var.project_name}-private-${count.index + 1}"
+
+  ami                    = var.ami_id
+  instance_type          = "t2.micro"
+  subnet_id              = module.vpc.private_subnets[count.index % length(module.vpc.private_subnets)]
+  vpc_security_group_ids = [aws_security_group.private.id]
+
+  tags = {
+    Name = "${var.project_name}-private-${count.index + 1}"
+  }
 }
