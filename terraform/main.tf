@@ -125,6 +125,10 @@ module "ansible_controller" {
   vpc_security_group_ids      = [aws_security_group.ansible_controller.id]
   associate_public_ip_address = true
 
+  root_block_device = {
+    volume_size = 8
+  }
+
   user_data = <<-EOF
     #!/bin/bash
     dnf install -y python3-pip
@@ -144,7 +148,7 @@ module "private_instances" {
     "amazon-1" = { ami = var.ami_id, os = "amazon", subnet_idx = 0 }
     "amazon-2" = { ami = var.ami_id, os = "amazon", subnet_idx = 1 }
     "amazon-3" = { ami = var.ami_id, os = "amazon", subnet_idx = 0 }
-    "ubuntu-1" = { ami = var.ubuntu_ami_id, os = "ubuntu", subnet_idx = 1 }
+    "ubuntu-1" = { ami = var.ubuntu_ami_id, os = "ubuntu", subnet_idx = 0 }
     "ubuntu-2" = { ami = var.ubuntu_ami_id, os = "ubuntu", subnet_idx = 0 }
     "ubuntu-3" = { ami = var.ubuntu_ami_id, os = "ubuntu", subnet_idx = 1 }
   }

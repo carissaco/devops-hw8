@@ -55,7 +55,12 @@
       - <img width="1472" height="533" alt="image" src="https://github.com/user-attachments/assets/44519f45-0a25-4733-b9fd-8c37ac2383b7" />
 
 ### Running the ansible playbook:
-- go into the inventory.ini file and update the amazon linux and ubuntu IPS with the ones you got from the terraform apply output
+- go into the inventory.ini file and update the amazon linux and ubuntu IPS with the ones you got from the terraform apply output. I've added mine but you want to remove those and add yours instead
+- secure copy your SSH key to the ansible controller
+- secure copy the inventory.ini and playbook.yml to the ansible controller
+- SSH into the ansible controller
+- verify Ansible is installed: `ansible --version`
+- run the playbook: `ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/id_ed25519_hw8`
 
 
 ## How to connect to the private instances from the bastion host:
