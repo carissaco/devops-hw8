@@ -5,26 +5,19 @@
 
 ## Repository Structure
 ```
-hw8/
-├── packer/
-│   └── amazon-linux.pkr.hcl       # Packer template that builds the custom AMI.
-│                                  # Installs Docker and injects the SSH public key.
-├── terraform/
-│   ├── main.tf                    # Root module that wires the vpc and ec2 modules together.
-│   ├── variables.tf               # Input variables: AMI ID, your IP, region, project name.
-│   ├── outputs.tf                 # Outputs the bastion public IP and private instance IPs after apply.
-│   └── modules/
-│       ├── vpc/
-│       │   ├── main.tf            # Creates the VPC, public/private subnets, internet gateway,
-│       │   │                      # NAT gateway, route tables, and route table associations.
-│       │   ├── variables.tf       # Input variables for the VPC module.
-│       │   └── outputs.tf         # Outputs the VPC ID and subnet IDs.
-│       └── ec2/
-│           ├── main.tf            # Creates the bastion host, 6 private EC2 instances,
-│           │                      # and security groups restricting SSH access.
-│           ├── variables.tf       # Input variables for the EC2 module.
-│           └── outputs.tf         # Outputs the bastion public IP and private instance IPs.
-└── README.md
+● devops-hw8/
+  ├── README.md                    
+  ├── .gitignore                   
+  ├── packer/                       # Packer templates for building custom AMIs
+  │   ├── amazon-linux.pkr.hcl      # Amazon Linux 2023 AMI with Docker
+  │   └── ubuntu.pkr.hcl            # Ubuntu 24.04 AMI with Docker
+  ├── terraform/                    # Terraform scripts to provision AWS resources
+  │   ├── main.tf                   # VPC, EC2 instances, security groups. Using both modules and handwritten resources for easier tasks
+  │   ├── variables.tf              # Input variables (AMI IDs, IP, region)
+  │   └── outputs.tf                # Output values (instance IPs)
+  └── ansible/                       # Ansible configuration management
+      ├── playbook.yml               # Playbook instructions to run 
+      └── inventory.ini              # Host inventory for the 6 EC2 instances so they know which hosts to connect to
 ```
 
 
@@ -39,7 +32,7 @@ hw8/
 - an AWS account with acces to us-east-1
 
 ### How to run:
-- Build the AMI with Packer: `cd` into your packer folder and run `packer init .`, then `packer build amazon-linux.pkr.hcl`
+- Build the AMI with Packer: `cd` into your packer folder and run `packer init amazon-linux.pkr.hcl`, then `packer build amazon-linux.pkr.hcl`
   - when complete, you should see the artifacts of successful builds. You want to note the AMI id down.
   - <img width="1458" height="158" alt="image" src="https://github.com/user-attachments/assets/ee4a1c17-fba2-4c48-88b4-a6be17402357" />
   - <img width="1033" height="298" alt="image" src="https://github.com/user-attachments/assets/bca60b32-39ca-49da-851f-f20560e2c525" />
@@ -66,6 +59,12 @@ hw8/
   - <img width="1461" height="252" alt="image" src="https://github.com/user-attachments/assets/a6ddd90e-e961-4de5-9153-2ab0b6ec6ee1" />
 - finally, verify that docker is working on the private instance by running `docker --version`
   - <img width="1482" height="51" alt="image" src="https://github.com/user-attachments/assets/d5880d52-5a72-42f2-ab9d-a0302c0958a9" />
+
+
+  # FOR ASSIGNMENT 11:
+  ## Build the Ubunti AMI with Packer:
+  - `cd packer`, then `packer build ubuntu.pkr.hcl`
+    - your output should should the Ubuntu AMI ID. note this down.
 
 
 
