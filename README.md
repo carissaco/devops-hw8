@@ -1,7 +1,9 @@
 ## Description:
 - In this repo, I used Packer to create a custom AMI and Terraform to create infrastructure that uses that AMI.
 - The AMI includes Amazon Linux, Docker, and my SSH public key pre-installed.
-- Terraform provisions a VPC with public and private subnets, a bastion host in the public subnet, and 6 EC2 instances in the private subnet using the custom AMI.
+- Terraform provisions a VPC with public and private subnets, a bastion host, an Ansible controller in the public subnet, and 6 EC2 instances (3 Amazon
+  Linux, 3 Ubuntu) in the private subnets using the custom AMIs. Each instance is tagged with its OS type.
+- Ansible is used to configure the 6 private instances: updating packages, verifying Docker, and reporting disk usage
 
 ## Repository Structure
 ```
@@ -38,9 +40,9 @@
   - <img width="1458" height="158" alt="image" src="https://github.com/user-attachments/assets/ee4a1c17-fba2-4c48-88b4-a6be17402357" />
   - <img width="1033" height="298" alt="image" src="https://github.com/user-attachments/assets/bca60b32-39ca-49da-851f-f20560e2c525" />
 
-### Build the Ubunti AMI with Packer:
+### Build the Ubuntu AMI with Packer:
  - `cd packer`, then `packer build ubuntu.pkr.hcl`
-   - your output should should the Ubuntu AMI ID. note this down.
+   - your output should show the Ubuntu AMI ID. note this down.
      - <img width="1346" height="435" alt="image" src="https://github.com/user-attachments/assets/be5242e1-c903-49d3-8acf-ded2972db8e1" />
 
 - Provision infrastructure with Terraform:
@@ -66,7 +68,8 @@
   - <img width="1386" height="396" alt="image" src="https://github.com/user-attachments/assets/7b6cfd61-55cf-4b3d-b054-70593cb5498a" />
 - chmod 600 your key so that only you have permission to read/write the file: `chmod 600 ~/.ssh/<your-private-key>`
 - verify Ansible is installed on the controller: `ansible --version`
-- ssh into each ubuntu host and accept the host key. `ssh -i ~/.ssh/id_ed25519_hw8 ubuntu@<your-ubuntu-private-ip>`. Do this for all 3 of your ubuntu hosts.
+- ssh into each ubuntu host and accept the host key. `ssh -i ~/.ssh/<your-private-ssh-key-name> ubuntu@<your-ubuntu-private-ip>`. Do this for all 3 of your ubuntu hosts.
+- you may also need to ssh into the amazon linux hosts and accept the host keys as well. If so, run `ssh -i ~/.ssh/<your-private-key-name> ec2-user@<amazon-linux-private-ip>` for all 3 amazon linux instances.
 - run the playbook: `ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/<your-private-key>`. Your output should show which playbook tasks were complete along with a recap at the end.
   - <img width="1915" height="930" alt="image" src="https://github.com/user-attachments/assets/4cc8602d-1c39-4c2c-a3b5-73c6f5380d0a" />
   - <img width="1908" height="932" alt="image" src="https://github.com/user-attachments/assets/19e8442b-9f4d-4d27-b92b-1c5813a8361d" />
