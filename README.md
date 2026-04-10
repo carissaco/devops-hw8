@@ -66,10 +66,12 @@
   - <img width="1386" height="396" alt="image" src="https://github.com/user-attachments/assets/7b6cfd61-55cf-4b3d-b054-70593cb5498a" />
 - chmod 600 your key so that only you have permission to read/write the file: `chmod 600 ~/.ssh/<your-private-key>`
 - verify Ansible is installed on the controller: `ansible --version`
-- run the playbook: `ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/<your-private-key>`
-
-
-## How to connect to the private instances from the bastion host:
+- ssh into each ubuntu host and accept the host key. `ssh -i ~/.ssh/id_ed25519_hw8 ubuntu@<your-ubuntu-private-ip>`. Do this for all 3 of your ubuntu hosts.
+- run the playbook: `ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/<your-private-key>`. Your output should show which playbook tasks were complete along with a recap at the end.
+  - <img width="1915" height="930" alt="image" src="https://github.com/user-attachments/assets/4cc8602d-1c39-4c2c-a3b5-73c6f5380d0a" />
+  - <img width="1908" height="932" alt="image" src="https://github.com/user-attachments/assets/19e8442b-9f4d-4d27-b92b-1c5813a8361d" />
+  
+## (FROM ASSIGNMENT 8) How to connect to the private instances from the bastion host:
 - ssh into bastion using your bastion public ip using -A for agent forwarding:
   ```
   ssh -A -i ~/.ssh/id_ed25519_hw8 ec2-user@<bastion-public-ip>
