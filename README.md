@@ -55,10 +55,13 @@
       - <img width="1472" height="533" alt="image" src="https://github.com/user-attachments/assets/44519f45-0a25-4733-b9fd-8c37ac2383b7" />
 
 ### Running the ansible playbook:
-- go into the inventory.ini file and update the amazon linux and ubuntu IPS with the ones you got from the terraform apply output. I've added mine but you want to remove those and add yours instead
-- copy your SSH key to the ansible controller. You can use the command `scp -i ~/.ssh/<your-private-key-name> ~/.ssh/<your-private-key> ec2-user@<ansible-controller-ip>:/home/ec2-user/.ssh/`
+- go into the inventory.ini file and update the amazon linux and ubuntu IPS with the ones you got from the terraform apply output. I've added mine but you want to remove those and add yours instead'
+  - <img width="1087" height="236" alt="image" src="https://github.com/user-attachments/assets/acc45a6f-050e-482b-90b4-ddc8a5922c0a" />
+- copy your SSH key to the ansible controller. You can use the command `scp -i ~/.ssh/<your-private-key-name> ~/.ssh/<your-private-key> ec2-user@<ansible-controller-ip>:/home/ec2-user/.ssh/` if on MAC
   - I did this step because the ansible controller will use my SSH private key to connect to the 6 private instances via SSH in order to perform the tasks I added to the playbook on those instances.
+  - <img width="1451" height="68" alt="image" src="https://github.com/user-attachments/assets/d30c3184-94f2-4e2f-a66c-fdbd96ab8768" />
 - copy the inventory.ini and playbook.yml to the ansible controller. `scp -i ~/.ssh/<your-private-key-name> ansible/inventory.ini ansible/playbook.yml ec2-user@<ansible-controller-ip>:~/`
+  - <img width="1457" height="96" alt="image" src="https://github.com/user-attachments/assets/e70239fd-834c-4ee0-8789-a510a6bade0e" />
 - SSH into the ansible controller
 - verify Ansible is installed: `ansible --version`
 - run the playbook: `ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/id_ed25519_hw8`
