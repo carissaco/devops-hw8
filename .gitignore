@@ -14,7 +14,7 @@ packer_cache/
 *.pkr.hcl.lock.json
 manifest.json
 
-# SSH keys - never commit these
+# SSH keys
 *.pem
 *.key
 id_rsa*

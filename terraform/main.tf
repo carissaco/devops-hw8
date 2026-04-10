@@ -126,7 +126,7 @@ module "ansible_controller" {
   associate_public_ip_address = true
 
   root_block_device = {
-    volume_size = 8
+    size = 4
   }
 
   user_data = <<-EOF

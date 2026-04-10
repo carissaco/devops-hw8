@@ -56,8 +56,9 @@
 
 ### Running the ansible playbook:
 - go into the inventory.ini file and update the amazon linux and ubuntu IPS with the ones you got from the terraform apply output. I've added mine but you want to remove those and add yours instead
-- secure copy your SSH key to the ansible controller
-- secure copy the inventory.ini and playbook.yml to the ansible controller
+- copy your SSH key to the ansible controller. You can use the command `scp -i ~/.ssh/<your-private-key-name> ~/.ssh/<your-private-key> ec2-user@<ansible-controller-ip>:/home/ec2-user/.ssh/`
+  - I did this step because the ansible controller will use my SSH private key to connect to the 6 private instances via SSH in order to perform the tasks I added to the playbook on those instances.
+- copy the inventory.ini and playbook.yml to the ansible controller. `scp -i ~/.ssh/<your-private-key-name> ansible/inventory.ini ansible/playbook.yml ec2-user@<ansible-controller-ip>:~/`
 - SSH into the ansible controller
 - verify Ansible is installed: `ansible --version`
 - run the playbook: `ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/id_ed25519_hw8`
